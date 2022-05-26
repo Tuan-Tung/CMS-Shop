@@ -9,7 +9,6 @@ export const useAuth = () => {
   const { state, dispatch } = useContext(AuthContext);
   const login = async (data) => {
     const res = await useAuthApi.login(data);
-    console.log(res);
     dispatch({ type: "login", res });
   };
   const logout = () => {
