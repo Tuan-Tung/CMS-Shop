@@ -15,7 +15,6 @@ export const useAuth = () => {
     localStorage.removeItem("token");
     dispatch({ type: "logout" });
 
-    router.push("/login");
   };
   // ...  còn một số thức khác
   const isAuthenticated = () => {

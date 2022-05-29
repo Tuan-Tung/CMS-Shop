@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import { Box, Container, Grid, Pagination } from '@mui/material';
-import { products } from '../__mocks__/products';
-import { ProductListToolbar } from '../components/product/product-list-toolbar';
-import { ProductCard } from '../components/product/product-card';
-import { DashboardLayout } from '../components/dashboard-layout';
-import ProductForm from 'src/sections/dashboard/product/ProductForm';
+import { products } from '../../__mocks__/products';
+import { ProductListToolbar } from '../../components/product/product-list-toolbar';
+import { ProductCard } from '../../components/product/product-card';
+import { DashboardLayout } from '../../components/dashboard-layout';
+import ProductTableForm from 'src/sections/dashboard/product/ProductTableForm';
 
 const Products = () => (
   <>
@@ -24,8 +24,7 @@ const Products = () => (
         <ProductListToolbar />
         <Box sx={{ pt: 3 }}>
           <Grid>
-            <ProductForm />
-           
+            <ProductTableForm />
           </Grid>
         </Box>
       </Container>

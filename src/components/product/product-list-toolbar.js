@@ -11,6 +11,7 @@ import {
 import { Download as DownloadIcon } from '../../icons/download';
 import { Search as SearchIcon } from '../../icons/search';
 import { Upload as UploadIcon } from '../../icons/upload';
+import NextLink from 'next/link';
 
 export const ProductListToolbar = (props) => (
   <Box {...props}>
@@ -30,13 +31,14 @@ export const ProductListToolbar = (props) => (
         Products
       </Typography>
       <Box sx={{ m: 1 }}>
-        
+        <NextLink href="/products/add">
         <Button
           color="primary"
           variant="contained"
         >
           Add products
         </Button>
+        </NextLink>
       </Box>
     </Box>
     <Box sx={{ mt: 3 }}>

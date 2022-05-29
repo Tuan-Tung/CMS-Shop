@@ -67,8 +67,12 @@ export const FormTable = ({ dataTable, columns, ...rest }) => {
   };
 
   const HeaderTable = ({ valuesHeader }) => {
-    return <TableCell>{valuesHeader.headerName}</TableCell>;
+    return <TableCell>{valuesHeader.name}</TableCell>;
   };
+  const ListItemTable = ({rowData,valuesItem}) => {
+    return <TableCell>{rowData?.[valuesItem.field]}</TableCell>
+
+  }
 
   return (
     <Card {...rest}>
@@ -91,7 +95,8 @@ export const FormTable = ({ dataTable, columns, ...rest }) => {
                   </TableCell>
                 ) : null}
                 {columns.map((valuesHeader) => (
-                  <HeaderTable key={valuesHeader.field} valuesHeader={valuesHeader} />
+                  <HeaderTable key={valuesHeader.field} 
+                    valuesHeader={valuesHeader} />
                 ))}
               </TableRow>
             </TableHead>
@@ -112,25 +117,11 @@ export const FormTable = ({ dataTable, columns, ...rest }) => {
                       />
                     </TableCell>
                   ) : null}
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: "center",
-                        display: "flex",
-                      }}
-                    >
-                      <Avatar src={rowData.avatarUrl} sx={{ mr: 2 }}>
-                        {rowData.firstName}
-                      </Avatar>
-                      <Typography color="textPrimary" variant="body1" maxWidth={300}>
-                        {rowData.firstName}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{rowData.lastName}</TableCell>
-                  <TableCell>{`${rowData.age}`}</TableCell>
-                  {/* <TableCell>{rowData.phone}</TableCell> */}
-                  <TableCell>{format(rowData.createdAt, "dd/MM/yyyy")}</TableCell>
+                   {columns.map((valuesItem) => (
+                  <ListItemTable key={valuesItem.field} 
+                    valuesItem={valuesItem} 
+                    rowData={rowData} />
+                ))}
                 </TableRow>
               ))}
             </TableBody>

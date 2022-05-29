@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
+import { useAuth } from 'src/hooks/useAuth';
+import { useRouter } from "next/router";
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -17,7 +19,18 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
 export const DashboardLayout = (props) => {
   const { children } = props;
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const router = useRouter();
 
+  const {userInfo} = useAuth();
+  const CheckRoleAD = () => {
+    if(userInfo?.role === 0){
+      localStorage.removeItem("token");
+      router.push('/login')
+    }
+  }
+  useEffect(() =>{
+    CheckRoleAD();
+  },[])
   return (
     <>
       <DashboardLayoutRoot>

@@ -5,9 +5,9 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
-import { useAuth } from "src/hooks/useAuth.js";
-import { AuthContext, AuthProvider } from "../context/JWTContext.js";
+import { SnackbarProvider } from 'notistack';
+import React from "react";
+import { AuthProvider } from "../context/JWTContext.js";
 import { theme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 
@@ -41,12 +41,20 @@ const App = (props) => {
         content="initial-scale=1, width=device-width" />
       </Head>
       <AuthProvider value>
+        <SnackbarProvider maxSnack={3}
+         anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+      }}
+      // TransitionComponent={Slide}
+      >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             {getLayout(<Component {...pageProps} />)}
           </ThemeProvider>
         </LocalizationProvider>
+        </SnackbarProvider>
       </AuthProvider>
     </CacheProvider>
   );

@@ -1,16 +1,17 @@
-import React, { useContext } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useRouter } from "next/router";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useAuthApi } from "src/service/api-app/authApi";
-import { useAuth } from "src/hooks/useAuth";
+import { useRouter } from "next/router";
+import React, { useContext } from "react";
 import { AuthContext } from "src/context/JWTContext";
+import { useAuth } from "src/hooks/useAuth";
+import * as Yup from "yup";
+import { useSnackbar } from "notistack";
 
 const LoginForm = () => {
   const context = useContext(AuthContext);
   const router = useRouter();
-  const {login} = useAuth()
+  const { enqueueSnackbar } = useSnackbar();
+  const { login } = useAuth()
 
   const formik = useFormik({
     initialValues: {
@@ -25,8 +26,16 @@ const LoginForm = () => {
       try {
         await login(data);
         router.push("/");
+        enqueueSnackbar("Login Successfully!",{
+          variant: 'success',
+          autoHideDuration: 2000,
+        });
+        
       } catch (error) {
-        console.log(error)
+        enqueueSnackbar(error.response.data.message, {
+          variant: 'error',
+        });
+        console.log(error);
       }
     },
   });

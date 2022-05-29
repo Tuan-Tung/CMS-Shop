@@ -39,11 +39,11 @@ const items = [
     icon: (<UserIcon fontSize="small" />),
     title: 'Account'
   },
-  // {
-  //   href: '/settings',
-  //   icon: (<CogIcon fontSize="small" />),
-  //   title: 'Settings'
-  // },
+  {
+    href: '/categorys',
+    icon: (<CogIcon fontSize="small" />),
+    title: 'Categorys'
+  },
   // {
   //   href: '/login',
   //   icon: (<LockIcon fontSize="small" />),
@@ -54,17 +54,20 @@ const items = [
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
-  const {userInfo} = useAuth();
+  const {userInfo,logout} = useAuth();
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false
   });
   const active = '/login' ? (router.pathname === '/login') : false;
-
-  const handleLogout =  () => {
-    localStorage.removeItem("token");
-     router.push('/login')
+  const handleLogout = async () => {
+     try {
+       await logout()
+       router.push("/login");
+     } catch (error) {
+       console.log(error);
+     }
   }
   useEffect(
     () => {
@@ -123,7 +126,7 @@ export const DashboardSidebar = (props) => {
                   color="inherit"
                   variant="subtitle1"
                 >
-                  {userInfo?.result?.name}
+                  {userInfo?.name}
                 </Typography>
                 <Typography
                   color="neutral.400"
@@ -131,7 +134,7 @@ export const DashboardSidebar = (props) => {
                 >
                   Email
                   {' '}
-                  : {userInfo?.result?.email}
+                  : {userInfo?.email}
                 </Typography>
               </div>
               <SelectorIcon
