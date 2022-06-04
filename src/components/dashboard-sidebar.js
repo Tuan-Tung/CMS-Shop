@@ -126,7 +126,7 @@ export const DashboardSidebar = (props) => {
                   color="inherit"
                   variant="subtitle1"
                 >
-                  {userInfo?.name}
+                  {userInfo?.name || userInfo?.result?.name}
                 </Typography>
                 <Typography
                   color="neutral.400"
@@ -134,7 +134,7 @@ export const DashboardSidebar = (props) => {
                 >
                   Email
                   {' '}
-                  : {userInfo?.email}
+                  : {userInfo?.email || userInfo?.result?.email}
                 </Typography>
               </div>
               <SelectorIcon

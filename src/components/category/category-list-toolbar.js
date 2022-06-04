@@ -36,7 +36,7 @@ import { Search as SearchIcon } from '../../icons/search';
           </NextLink>
         </Box>
       </Box>
-      <Box sx={{ mt: 3 }}>
+      {/* <Box sx={{ mt: 3 }}>
         <Card>
           <CardContent>
             <Box sx={{ maxWidth: 500 }}>
@@ -60,7 +60,7 @@ import { Search as SearchIcon } from '../../icons/search';
             </Box>
           </CardContent>
         </Card>
-      </Box>
+      </Box> */}
     </Box>
   );
   

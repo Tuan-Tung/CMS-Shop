@@ -71,7 +71,7 @@ export const DashboardNavbar = (props) => {
               </Badge>
             </IconButton>
           </Tooltip>
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>{getInitials(userInfo?.name)}</Avatar>
+          <Avatar sx={{ bgcolor: deepOrange[500] }}>{getInitials(userInfo?.name || userInfo?.result?.name)}</Avatar>
         </Toolbar>
       </DashboardNavbarRoot>
     </>

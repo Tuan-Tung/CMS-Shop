@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -7,37 +7,43 @@ import {
   CardHeader,
   Divider,
   Grid,
-  Stack,
-  TextField
+  MenuItem,
+  Select,
+  TextField,
+  InputLabel
 } from '@mui/material';
 import { Container } from '@mui/system';
 import { useRouter } from 'next/router';
-
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
+import { useCategoryApi } from 'src/service/api-app/categoryApi';
+import { useSnackbar } from 'notistack';
 
 const CategoryNewForm = (props) => {
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    name: '',
+    parentId: '',
   });
+  const [parentCategory, setParentCategory] = useState([]);
+
+  const fetchListCategory = async () => {
+    try {
+      const res = await useCategoryApi.fetchCategory();
+      setParentCategory(res?.categories.map((value) => ({
+        ...value,
+        _id: value?._id,
+        name: value?.name,
+        slug: value?.slug,
+      })))
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchListCategory();
+  },[])
 
   const handleChange = (event) => {
     setValues({
@@ -46,14 +52,38 @@ const CategoryNewForm = (props) => {
     });
   };
 
+
   const handleCancel = () => {
     router.push('/categorys')
   }
-  const handleSubmit = () => {
-    console.log(values);
+  const handleSubmit = async () => {
+    let params = {}
+    if(values.parentId) {
+      params = {
+        name: values.name,
+        parentId: values.parentId,
+      }
+    }else {
+      params = {
+        name: values.name,
+      }
+    }
+    try {
+      await useCategoryApi.createCategory(params);
+      enqueueSnackbar("Create Category Success!",{
+        variant: 'success',
+        autoHideDuration: 2000,
+      });
+      router.push('/categorys');
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar(error.response.data.error, {
+        variant: 'error',
+      });
+    }
   }
 
-  return (
+return (
     <form
       autoComplete="off"
       noValidate
@@ -75,14 +105,13 @@ const CategoryNewForm = (props) => {
               md={6}
               xs={12}
             >
+              <InputLabel id="demo-select-small">Shoe Name (or category)</InputLabel>
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
+                name="name"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.name}
                 variant="outlined"
               />
             </Grid>
@@ -91,88 +120,26 @@ const CategoryNewForm = (props) => {
               md={6}
               xs={12}
             >
-              <TextField
+              <InputLabel id="demo-select-small">Shoe Category</InputLabel>
+              <Select
                 fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
+              name="parentId"
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={values.parentId}
+              onChange={handleChange}
             >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
+            <MenuItem value="">
+            <em>None</em>
+            </MenuItem>
+            {parentCategory?.map((categorys,index) => (
+              <MenuItem key={index} 
+                value={`${categorys?._id}`}>{categorys?.name}
+              </MenuItem>
+            ))}
+          </Select>
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
         </CardContent>
         <Divider />
         <Box
