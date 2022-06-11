@@ -1,12 +1,13 @@
+import { Grid } from '@mui/material';
 import { DashboardLayout } from 'src/components/dashboard-layout';
 import CategoryNewForm from 'src/sections/dashboard/category/CategoryNewForm';
 
 const ProductCreate = () => {
 
   return (
-    <div>
+    <Grid padding={"40px 0"}>
         <CategoryNewForm />
-    </div>
+    </Grid>
   );
 };
 ProductCreate.getLayout = (page) => (

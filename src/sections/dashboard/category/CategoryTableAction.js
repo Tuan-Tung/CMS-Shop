@@ -4,6 +4,8 @@ import { Icon } from "@iconify/react";
 import NextLink from 'next/link';
 import { useCategoryApi } from 'src/service/api-app/categoryApi';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import CategoryView from "./CategoryView";
 
 const style = {
   borderRadius: '10px',
@@ -20,12 +22,17 @@ const style = {
 
 const CategoryTableAction = (props) => {
   const { id, isRefresh, setIsRefresh } = props;
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [openFormEditCategory, setOpenFormEditCategory] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
+  const handleOpenFormEditCategory = () => setOpenFormEditCategory(true);
+  const handleCloseFormEditCategory = () => setOpenFormEditCategory(false);
+
   const  deleteCategory = async () => {
     try {
       await useCategoryApi.deleteCategory(id);
@@ -37,6 +44,13 @@ const CategoryTableAction = (props) => {
       setOpen(false)
     } catch (error) {
       console.log(error);
+    }
+  }
+  const updateCategory = async ( ) => {
+    try {
+      
+    } catch (error) {
+      
     }
   }
   return (
@@ -78,13 +92,47 @@ const CategoryTableAction = (props) => {
           </Stack>
         </Box>
       </Modal>
-      <NextLink href={`/categorys/${id}/view`}>
-      <Button title="View"
+      {router.asPath === "/categorys" ?
+      <CategoryView idView={id} /> : 
+      <Button title="edit"
+        onClick={handleOpenFormEditCategory}
         size="medium">
         <Icon fontSize={20}
-            icon="carbon:view-filled" />
+            icon="clarity:edit-solid" />
       </Button>
-      </NextLink>
+      }
+      <Modal
+        open={openFormEditCategory}
+        onClose={handleCloseFormEditCategory}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          
+          <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: 20 }}>
+            Do you want to delete category ?
+          </Typography>
+          {/* <TextField /> */}
+          <Stack direction="row" 
+            justifyContent="end" 
+            padding={'10px 0'}
+            spacing={2}>
+          <Button
+            onClick={updateCategory}
+            size="medium"
+            variant="outlined">
+              Save
+          </Button>
+          <Button
+            onClick={handleCloseFormEditCategory}
+            size="medium"
+            variant="outlined" 
+            color="error">
+              Cancle
+          </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </Grid>
   );
 };
