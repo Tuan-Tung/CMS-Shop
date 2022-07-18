@@ -21,7 +21,8 @@ const App = (props) => {
    // checks if the user is authenticated
   if(localStorage.getItem("token")){
     if(router.asPath !== "/login"){
-      router.push(`${router.asPath}`)
+      
+      return false;
     }
     else{
       router.push("/")

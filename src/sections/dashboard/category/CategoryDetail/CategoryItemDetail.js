@@ -16,24 +16,29 @@ const columns = [
 ];
 
 
-const CategoryItemDetail = () => {
+const CategoryItemDetail = (props) => {
   const [dataCategory, setDataCategory] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
   const router = useRouter();
-console.log('router.query: ',router.query);
+
   const fetchListCategory = async () => {
     try {
       const res = await useCategoryApi.fetchCategory();
-      setDataCategory(res?.categories.map((value) => ({
-        ...value,
-        _id: value?._id,
-        name: value?.name,
-        slug: value?.slug,
-        action: <CategoryTableAction id={value?._id} 
-                  setIsRefresh={setIsRefresh}
-                  isRefresh={isRefresh}
-                />
-      })))
+     res?.categories.map((value) => {
+        if(value?._id === props?.idCategory){
+          setDataCategory(value?.children?.map((childrenValue) => ({
+            ...childrenValue,
+            _id: childrenValue?._id,
+            name: childrenValue?.name,
+            slug: childrenValue?.slug,
+            action: <CategoryTableAction id={childrenValue?._id} 
+                      nameShoe={childrenValue?.name}
+                      setIsRefresh={setIsRefresh}
+                      isRefresh={isRefresh}
+                    />
+          })))
+        }
+    })
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +48,7 @@ console.log('router.query: ',router.query);
     fetchListCategory();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[isRefresh])
-  
+
   return (
     <Grid>
       <FormTable 

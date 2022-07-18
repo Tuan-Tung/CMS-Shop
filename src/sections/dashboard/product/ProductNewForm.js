@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  Autocomplete,
   Box,
   Button,
   Card,
@@ -12,6 +13,8 @@ import {
 } from '@mui/material';
 import { Container } from '@mui/system';
 import { useRouter } from 'next/router';
+import { useProductApi } from 'src/service/api-app/productApi';
+import { useCategoryApi } from 'src/service/api-app/categoryApi';
 
 const states = [
   {
@@ -30,13 +33,16 @@ const states = [
 
 const ProductNewForm = (props) => {
   const router = useRouter();
+  const [category,setCategory] = useState([]);
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    shoeName: 'Katarina',
+    description: 'Smith',
+    productImage: [],
+    quantity: 0,
+    price: 0,
+    sale: 0,
+    sizeProduct: [],
+    category: []
   });
 
   const handleChange = (event) => {
@@ -52,6 +58,22 @@ const ProductNewForm = (props) => {
   const handleSubmit = () => {
     console.log(values);
   }
+  const fetchListCategory = async () => {
+    try {
+      const res = await useCategoryApi.fetchCategory();
+      setCategory(res?.category?.map((cate) => ({
+        ...cate,
+        _id: cate._id,
+        name: cate.name,
+      })))
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchListCategory();
+  },[])
 
   return (
     <form
@@ -78,11 +100,11 @@ const ProductNewForm = (props) => {
               <TextField
                 fullWidth
                 helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
+                label="Shoe Nam"
+                name="shoeName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.shoeName}
                 variant="outlined"
               />
             </Grid>
@@ -93,11 +115,14 @@ const ProductNewForm = (props) => {
             >
               <TextField
                 fullWidth
-                label="Last name"
-                name="lastName"
+                label="Description"
+                name="description"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                multiline
+                rows={4}
+                maxRows={5}
+                value={values.description}
                 variant="outlined"
               />
             </Grid>
@@ -108,11 +133,12 @@ const ProductNewForm = (props) => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
-                name="email"
+                label="Quantity"
+                name="quantity"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={values.quantity}
+                type="number"
                 variant="outlined"
               />
             </Grid>
@@ -123,11 +149,11 @@ const ProductNewForm = (props) => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
-                name="phone"
+                label="Price"
+                name="price"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
+                value={values.price}
                 variant="outlined"
               />
             </Grid>
@@ -138,11 +164,12 @@ const ProductNewForm = (props) => {
             >
               <TextField
                 fullWidth
-                label="Country"
-                name="country"
+                label="Sale"
+                name="sale"
                 onChange={handleChange}
                 required
-                value={values.country}
+                type="number"
+                value={values.sale}
                 variant="outlined"
               />
             </Grid>
@@ -151,26 +178,23 @@ const ProductNewForm = (props) => {
               md={6}
               xs={12}
             >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+              <Autocomplete
+        multiple
+        id="tags-outlined"
+        options={category}
+        limitTags={3}
+        getOptionLabel={(option) => option?.name}
+        name="category"
+        onChange={(e, value) => setValues({...values, category: value.map((val) => val?._id)})}
+        filterSelectedOptions
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Category"
+            placeholder=""
+          />
+        )}
+      />
             </Grid>
           </Grid>
         </CardContent>

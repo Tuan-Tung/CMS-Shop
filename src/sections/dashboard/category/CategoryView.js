@@ -7,9 +7,7 @@ import { useRouter } from 'next/router';
 const CategoryView = ({idView,queryId}) => {
   const router = useRouter();
   
-console.log("idview: ",idView);
     const handleView = async () => {
-        console.log(router);
         if(typeof window !== 'undefined'){
           router.push({
             pathname: "/categorys/[id]",
@@ -21,14 +19,12 @@ console.log("idview: ",idView);
        
       }
   return (
-    // <NextLink href={`/categorys/${id}/view`}>
       <Button title="View"
         onClick={handleView}
         size="medium">
         <Icon fontSize={20}
             icon="carbon:view-filled" />
       </Button>
-    //   </NextLink>
   )
 }
 

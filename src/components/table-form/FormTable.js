@@ -104,9 +104,9 @@ export const FormTable = ({ dataTable, columns, ...rest }) => {
               {dataTable.slice(page * limit, page * limit + limit).map((rowData) => (
                 <TableRow
                   hover
-                  key={rowData.id}
+                  key={rowData?.id}
                   tabIndex={-1}
-                  selected={selectedTableItems.indexOf(rowData.id) !== -1}
+                  selected={selectedTableItems.indexOf(rowData?.id) !== -1}
                 >
                   {rest.checkboxTable ? (
                     <TableCell padding="checkbox">

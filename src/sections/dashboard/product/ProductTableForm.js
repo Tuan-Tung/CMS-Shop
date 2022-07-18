@@ -1,19 +1,24 @@
 import { Icon } from "@iconify/react";
 import { Grid, Button, Menu } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormTable } from "src/components/table-form/FormTable";
 import ProductTableAction from "./ProductTableAction";
+import { useProductApi } from "src/service/api-app/productApi";
 
 const columns = [
   { field: "id", name: "ID" },
-  { field: "firstName", name: "First name" },
-  { field: "lastName", name: "Last name" },
+  { field: "title", name: "First name" },
+  { field: "price", name: "Price" },
   {
-    field: "age",
-    name: "Age",
+    field: "sale",
+    name: "Sale",
   },
   {
-    field: "createdAt",
+    field: "description",
+    name: "Description",
+  },
+  {
+    field: "createAt",
     name: "CreatedAt",
   },
   {
@@ -24,8 +29,37 @@ const columns = [
 
 
 const ProductTableForm = () => {
- 
+  const [dataProduct, setDataProduct] = useState([]);
+  const [searchPro, setSearchPro] = useState('');
+  const [isRefresh, setIsRefresh] = useState(false);
   
+  const fetchListProduct = async () => {
+    let param = searchPro === '' ? 'a' : searchPro;
+    try {
+      const res = await useProductApi.fetchProduct(param);
+      console.log(res);
+      setDataProduct(res?.products?.map((product) => ({
+        ...product,
+        id: product?._id,
+        title: product?.title,
+        price: product?.price,
+        sale: product?.sale + "%",
+        createAt: product?.createAt,
+        description: product?.description,
+        action: <ProductTableAction id={product?._id} 
+        setIsRefresh={setIsRefresh}
+        isRefresh={isRefresh}
+      />
+      })))
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchListProduct();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[isRefresh])
   const dataTable = [
     {
       id: 1,
@@ -35,76 +69,12 @@ const ProductTableForm = () => {
       createdAt: "19/02/2002",
       age: 35,
     },
-    {
-      id: 2,
-      action: (<ProductTableAction />),
-      lastName: "Lannister",
-      firstName: "Cersei",
-      createdAt: 1555016400000,
-      age: 42,
-    },
-    {
-      id: 3,
-      action: (<ProductTableAction />),
-      lastName: "Lannister",
-      firstName: "Jaime",
-      createdAt: 1555016400000,
-      age: 45,
-    },
-    {
-      id: 4,
-      action: (<ProductTableAction />),
-      lastName: "Stark",
-      firstName: "Arya",
-      createdAt: 1555016400000,
-      age: 16,
-    },
-    {
-      id: 5,
-      action: (<ProductTableAction />),
-      lastName: "Targaryen",
-      firstName: "Daenerys",
-      createdAt: 1555016400000,
-      age: null,
-    },
-    {
-      id: 6,
-      action: (<ProductTableAction />),
-      lastName: "Melisandre",
-      firstName: null,
-      createdAt: 1555016400000,
-      age: 150,
-    },
-    {
-      id: 7,
-      action: (<ProductTableAction />),
-      lastName: "Clifford",
-      firstName: "Ferrara",
-      createdAt: 1555016400000,
-      age: 44,
-    },
-    {
-      id: 8,
-      action: (<ProductTableAction />),
-      lastName: "Frances",
-      firstName:
-        "Rossini  Rossini Ferrara FerraraFerraraFerrara Ferrara Ferrara Ferrara Ferrara Ferrara FerraraFerrara",
-      createdAt: 1555016400000,
-      age: 36,
-    },
-    {
-      id: 9,
-      action: (<ProductTableAction />),
-      lastName: "Roxie",
-      firstName: "Harvey",
-      createdAt: 1555016400000,
-      age: 65,
-    },
+    
   ];
 
   return (
     <Grid>
-      <FormTable dataTable={dataTable} columns={columns} />
+      <FormTable dataTable={dataProduct} columns={columns} />
     </Grid>
   );
 };

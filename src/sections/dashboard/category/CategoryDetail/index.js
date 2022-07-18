@@ -27,25 +27,6 @@ const CategoryDetailForm = (props) => {
     name: '',
     parentId: '',
   });
-  const [parentCategory, setParentCategory] = useState([]);
-
-  const fetchListCategory = async () => {
-    try {
-      const res = await useCategoryApi.fetchCategory();
-      setParentCategory(res?.categories.map((value) => ({
-        ...value,
-        _id: value?._id,
-        name: value?.name,
-        slug: value?.slug,
-      })))
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchListCategory();
-  },[])
 
   const handleChange = (event) => {
     setValues({
@@ -53,7 +34,6 @@ const CategoryDetailForm = (props) => {
       [event.target.name]: event.target.value
     });
   };
-
 
   const handleCancel = () => {
     router.push('/categorys')
@@ -71,8 +51,8 @@ const CategoryDetailForm = (props) => {
       }
     }
     try {
-      await useCategoryApi.createCategory(params);
-      enqueueSnackbar("Create Category Success!",{
+      await useCategoryApi.updateCategory(router.query?.id,params);
+      enqueueSnackbar("Update Category Success!",{
         variant: 'success',
         autoHideDuration: 2000,
       });
@@ -117,32 +97,9 @@ return (
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <InputLabel id="demo-select-small">Shoe Category</InputLabel>
-              <Select
-                fullWidth
-              name="parentId"
-              labelId="demo-select-small"
-              id="demo-select-small"
-              value={values.parentId}
-              onChange={handleChange}
-            >
-            <MenuItem value="">
-            <em>None</em>
-            </MenuItem>
-            {parentCategory?.map((categorys,index) => (
-              <MenuItem key={index} 
-                value={`${categorys?._id}`}>{categorys?.name}
-              </MenuItem>
-            ))}
-          </Select>
+           
             </Grid>
-            </Grid>
-              <CategoryItemDetail />
+              <CategoryItemDetail idCategory={props.id} />
           </CardContent>
         <Divider />
         <Box
@@ -165,7 +122,7 @@ return (
             variant="contained"
             onClick={handleSubmit}
           >
-            Create
+            Save
           </Button>
         </Box>
       </Card>
