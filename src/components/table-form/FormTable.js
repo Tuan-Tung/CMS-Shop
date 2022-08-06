@@ -101,7 +101,7 @@ export const FormTable = ({ dataTable, columns, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {dataTable.slice(page * limit, page * limit + limit).map((rowData) => (
+              {dataTable?.slice(page * limit, page * limit + limit).map((rowData) => (
                 <TableRow
                   hover
                   key={rowData?.id}
@@ -130,7 +130,7 @@ export const FormTable = ({ dataTable, columns, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={dataTable.length}
+        count={dataTable?.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}

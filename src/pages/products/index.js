@@ -22,11 +22,6 @@ const Products = () => (
     >
       <Container maxWidth={false}>
         <ProductListToolbar />
-        <Box sx={{ pt: 3 }}>
-          <Grid>
-            <ProductTableForm />
-          </Grid>
-        </Box>
       </Container>
     </Box>
   </>
