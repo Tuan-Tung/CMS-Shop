@@ -2,7 +2,7 @@ import axios from "axios";
 import queryString from "query-string"
 
 const BaseInstance = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://server-indol-nine.vercel.app/",
     headers: {
         'content-type':'application/json',
         'Authorization': ''
