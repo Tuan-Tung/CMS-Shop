@@ -43,8 +43,8 @@ const ProductTableForm = (props) => {
           id: product?._id,
           img: <Avatar alt="" src={product?.productImage[0]?.img} />,
           title: product?.title,
-          price: product?.price,
-          sale: product?.sale + "%",
+          price: product?.price || 0,
+          sale: (product?.sale || 0) + "%",
           createAt: product?.createAt,
           description: product?.description,
           action: (
